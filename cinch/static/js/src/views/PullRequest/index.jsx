@@ -1,5 +1,6 @@
 import React from 'react';
-import cx from 'classnames';
+
+import Jenkins from './views/Jenkins';
 
 
 const PullRequest = React.createClass({
@@ -13,23 +14,7 @@ const PullRequest = React.createClass({
     const shortHeadSha = pull.head.substr(0, 9);
     const shortMergeSha = pull['merge_head'].substr(0, 9);
 
-    const jobs = pull.jobs.map(job => {
-
-      const labelClasses = cx({
-        'label': true,
-        'label-success': job.status === true,
-        'label-warning': job.status === null,
-        'label-danger': job.status === false
-      });
-
-      return (
-        <div className="PullRequest_Job">
-          <a href={job.url} className={labelClasses}>
-            {job.name}: {job['build_number']}
-          </a>
-        </div>
-      );
-    });
+    const jenkinsCheck = pull.checks.find((check) => check.label === 'Jenkins');
 
     return (
       <div className="PullRequest">
@@ -38,8 +23,7 @@ const PullRequest = React.createClass({
         </h3>
         <div className="row">
           <div className="col-md-8">
-            <h4>Jenkins</h4>
-            {jobs}
+            <Jenkins check={jenkinsCheck} jobs={pull.jobs} />
           </div>
           <div className="col-md-4">
             <div className="PullRequest__Meta">
