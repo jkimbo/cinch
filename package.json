@@ -1,0 +1,32 @@
+{
+  "name": "cinch",
+  "version": "0.0.0",
+  "description": "CInch - Making CI a cinch",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/onefinestay/cinch.git"
+  },
+  "author": "",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/onefinestay/cinch/issues"
+  },
+  "homepage": "https://github.com/onefinestay/cinch#readme",
+  "dependencies": {
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "babel-core": "^5.2.17",
+    "babel-loader": "^5.0.0",
+    "babel-runtime": "^5.2.17",
+    "node-libs-browser": "^0.5.0",
+    "webpack": "^1.9.4"
+  }
+}

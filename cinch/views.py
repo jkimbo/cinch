@@ -1,5 +1,6 @@
 from flask import g, render_template, url_for
 import logging
+from sqlalchemy.orm import class_mapper
 
 from cinch import app, db
 from cinch.auth.decorators import requires_auth
@@ -15,6 +16,18 @@ AdminView  # pyflakes. just want the module imported
 
 
 app.register_blueprint(jenkins, url_prefix='/jenkins')
+
+
+def serialize(model, fields=None):
+  """Transforms a model into a dictionary which can be dumped to JSON."""
+  # first we get the names of all the columns on your model
+  columns = [c.key for c in class_mapper(model.__class__).columns]
+
+  if fields is None:
+      fields = columns
+
+  # then we return their values in a dict
+  return dict((c, getattr(model, c)) for c in columns if c in fields)
 
 
 def sync_label(ahead, behind):
@@ -81,8 +94,15 @@ def pull_request(project_owner, project_name, number):
     pull_request.sync_label = sync_label(
         pull_request.ahead_of_master, pull_request.behind_master)
 
+    context = {
+        'pull': pull_request,
+        'JS_PAYLOAD': {
+            'pull': serialize(pull_request)
+        }
+    }
+
     return render_template(
-        'pull_request.html', pull=pull_request)
+        'pull_request.html', **context)
 
 
 # test route

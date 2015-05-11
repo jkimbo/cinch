@@ -3,3 +3,4 @@ local_settings.py
 *.pyc
 pip-log.txt
 setup_env.sh
+node_modules/
