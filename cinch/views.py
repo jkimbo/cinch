@@ -7,7 +7,8 @@ from cinch.auth.decorators import requires_auth
 from cinch.check import run_checks
 from cinch.models import PullRequest, Project
 from cinch.admin import AdminView
-from cinch.jenkins.views import jenkins
+from cinch.jenkins.views import jenkins, get_jenkins_url, JENKINS_BUILD_TEMPLATE
+from cinch.jenkins.controllers import all_open_prs
 
 logger = logging.getLogger(__name__)
 
@@ -90,14 +91,46 @@ def pull_request(project_owner, project_name, number):
     if pull_request is None:
         return "Unknown pull request", 404
 
-    pull_request.checks = list(run_checks(pull_request))
-    pull_request.sync_label = sync_label(
+    pull_request_project = pull_request.project
+
+    pr_map = all_open_prs()
+    jobs = pull_request_project.jobs
+
+    job_statuses = []
+    jenkins_url = get_jenkins_url()
+
+    for job in sorted(jobs, key=lambda j: j.name):
+        build_number, status = pr_map[pull_request][job.id]
+
+        if build_number is None:
+            status = None
+            url = None
+        else:
+            url = JENKINS_BUILD_TEMPLATE.format(
+                base_url=jenkins_url,
+                job_name=job.name,
+                build_number=build_number,
+            )
+
+        job_statuses.append(
+            dict(
+                build_number=build_number,
+                status=status,
+                url=url,
+                name=job.name,
+            )
+        )
+
+    pull_object = serialize(pull_request)
+    pull_object['jobs'] = job_statuses
+    pull_object['checks'] = map(lambda check: check.__dict__, list(run_checks(pull_request)))
+    pull_object['sync_label'] = sync_label(
         pull_request.ahead_of_master, pull_request.behind_master)
 
     context = {
         'pull': pull_request,
         'JS_PAYLOAD': {
-            'pull': serialize(pull_request)
+            'pull': pull_object,
         }
     }
 
