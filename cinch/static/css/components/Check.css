@@ -10,16 +10,17 @@ $danger-colour: #e74c3c;
     .-t--success& {
         border-color: $success-colour;
     }
-    .-t--warning & {
+    .-t--warning& {
         border-color: $warning-colour;
     }
-    .-t--danger & {
+    .-t--danger& {
         border-color: $danger-colour;
     }
 
     &__Title {
         padding: 20px;
         margin-top: 0;
+        margin-bottom: 0;
 
         i {
             margin-right: 10px;
@@ -41,8 +42,19 @@ $danger-colour: #e74c3c;
         }
     }
 
+    &__Toggle {
+        cursor: pointer;
+        color: #fff;
+        float: right;
+    }
+
     &__Container {
-        padding: 0 20px 10px;
+        padding: 10px 20px;
+        display: none;
+
+        &--is-open {
+            display: block;
+        }
     }
 
     table {

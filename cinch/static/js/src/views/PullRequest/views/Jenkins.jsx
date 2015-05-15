@@ -41,8 +41,22 @@ const Jenkins = React.createClass({
     }),
   },
 
+  getInitialState() {
+    return {
+      open: (this.props.check.status !== true)
+    };
+  },
+
+  handleToggle(event) {
+    event.preventDefault();
+    this.setState({
+      open: !this.state.open
+    });
+  },
+
   render() {
     const {check, baseUrl} = this.props;
+    const {open} = this.state;
 
     let jobs = [];
 
@@ -60,7 +74,8 @@ const Jenkins = React.createClass({
           <tr className={itemClasses} key={job.id}>
             <td>{getIcon(job.status)}</td>
             <td>
-              <a href={url}>#{job['build_number']}</a>
+              {job['build_number'] ?
+                <a href={url}>#{job['build_number']}</a> : null}
             </td>
             <td>{job.name}</td>
           </tr>
@@ -74,14 +89,23 @@ const Jenkins = React.createClass({
       [`-t--${modifier}`]: true,
     });
 
+    const containerClasses = cx({
+      'Check__Container': true,
+      'Check__Container--is-open': this.state.open
+    });
+
     return (
       <div className={classes}>
         <h3 className="Check__Title">
           {getIcon(check.status)}
           {" "}
           Jenkins
+          <div className="Check__Toggle" onClick={this.handleToggle}>
+            {open ? <i className="fa fa-caret-up"></i> :
+              <i className="fa fa-caret-down"></i>}
+          </div>
         </h3>
-        <div className="Check__Container">
+        <div className={containerClasses}>
           <table className="table">
             {jobs}
           </table>
