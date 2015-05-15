@@ -1,6 +1,8 @@
 import React from 'react';
 
 import Jenkins from './views/Jenkins';
+import Mergeable from './views/Mergeable';
+import UpToDate from './views/UpToDate';
 
 
 const PullRequest = React.createClass({
@@ -18,15 +20,17 @@ const PullRequest = React.createClass({
       shortMergeSha = shortMergeSha.substr(0, 9);
     }
 
-    const jenkinsCheck = pull.checks.find((check) => check.label === 'Jenkins');
+    const jenkinsCheck = pull.checks.find((check) => check.key === 'jenkins');
+    const mergeableCheck = pull.checks.find((check) => check.key === 'mergeable');
+    const upToDateCheck = pull.checks.find((check) => check.key === 'uptodate');
 
     return (
       <div className="row">
         <div className="col-md-6 col-md-offset-3">
           <div className="PullRequest">
-            <h3 className="PullRequest__Title">
+            <h2 className="PullRequest__Title">
               <span style={{ color: '#9aa2ab' }}>#{pull.number}</span> {pull.title} <small>by {pull.owner}</small>
-            </h3>
+            </h2>
             <div className="PullRequest__Meta">
               <div className="PullRequest__Commit">
                 <a href="">
@@ -36,6 +40,14 @@ const PullRequest = React.createClass({
                 <a href="">
                   Merge head: {shortMergeSha}
                 </a>
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-md-6">
+                <UpToDate check={upToDateCheck} />
+              </div>
+              <div className="col-md-6">
+                <Mergeable check={mergeableCheck} />
               </div>
             </div>
             <Jenkins check={jenkinsCheck} baseUrl={jenkinsUrl} />

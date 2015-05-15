@@ -5,7 +5,7 @@ $danger-colour: #e74c3c;
 .Check {
     border: 1px solid #bebebe;
     border-radius: 2px;
-    margin: 20px 0;
+    margin: 10px 0;
 
     .-t--success& {
         border-color: $success-colour;

@@ -334,6 +334,7 @@ def jenkins_check(pull_request):
         })
 
     return CheckStatus(
+        key='jenkins',
         label='Jenkins',
         status=status,
         url=pull_request_status_url,

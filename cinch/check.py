@@ -12,8 +12,9 @@ class CheckStatus(object):
         verbose_name: more information about status (e.g. reason)
         url: url to page with more info around status (e.g. failed builds)
     """
-    def __init__(self, label='', status=None, verbose_name='', url=None,
+    def __init__(self, key='', label='', status=None, verbose_name='', url=None,
                  data=None):
+        self.key = key
         self.label = label
         self.status = status
         self.verbose_name = verbose_name or label

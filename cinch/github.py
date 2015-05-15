@@ -219,16 +219,18 @@ def handle_pull_request(parser):
 def check_strictly_ahead(pull):
     if pull.ahead_of_master > 0 and pull.behind_master == 0:
         # pull request is ahead of master and up to date with the latest head
-        return CheckStatus(label='Branch is up to date', status=True)
+        return CheckStatus(key='uptodate', label='Up to date', status=True)
     elif pull.ahead_of_master > 0 and pull.behind_master > 0:
         # pull request is ahead of master and up to date with the latest head
         return CheckStatus(
-            label='Branch is not up to date with master',
+            key='uptodate',
+            label='Not up to date',
             status=None,
         )
     else:
         return CheckStatus(
-            label='Branch has been already merged',
+            key='uptodate',
+            label='Already been merged',
             status=None,
         )
 
@@ -243,4 +245,4 @@ def check_mergeable(pull):
     }
 
     label = labels[status]
-    return CheckStatus(label=label, status=status)
+    return CheckStatus(key='mergeable', label=label, status=status)
