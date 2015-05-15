@@ -5,11 +5,12 @@ import Jenkins from './views/Jenkins';
 
 const PullRequest = React.createClass({
   propTypes: {
+    jenkinsUrl: React.PropTypes.string.isRequired,
     pull: React.PropTypes.object.isRequired
   },
 
   render() {
-    const {pull} = this.props;
+    const {pull, jenkinsUrl} = this.props;
 
     const shortHeadSha = pull.head.substr(0, 9);
     const shortMergeSha = pull['merge_head'].substr(0, 9);
@@ -17,15 +18,12 @@ const PullRequest = React.createClass({
     const jenkinsCheck = pull.checks.find((check) => check.label === 'Jenkins');
 
     return (
-      <div className="PullRequest">
-        <h3 className="PullRequest__Title">
-          <span style={{ color: '#9aa2ab' }}>#{pull.number}</span> {pull.title} <small>by {pull.owner}</small>
-        </h3>
-        <div className="row">
-          <div className="col-md-8">
-            <Jenkins check={jenkinsCheck} jobs={pull.jobs} />
-          </div>
-          <div className="col-md-4">
+      <div className="row">
+        <div className="col-md-6 col-md-offset-3">
+          <div className="PullRequest">
+            <h3 className="PullRequest__Title">
+              <span style={{ color: '#9aa2ab' }}>#{pull.number}</span> {pull.title} <small>by {pull.owner}</small>
+            </h3>
             <div className="PullRequest__Meta">
               <div className="PullRequest__Commit">
                 <a href="">
@@ -37,6 +35,7 @@ const PullRequest = React.createClass({
                 </a>
               </div>
             </div>
+            <Jenkins check={jenkinsCheck} baseUrl={jenkinsUrl} />
           </div>
         </div>
       </div>

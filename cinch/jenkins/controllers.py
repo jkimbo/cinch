@@ -10,6 +10,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from cinch.check import check, CheckStatus
 from cinch.controllers import get_project
 from cinch.models import db, PullRequest
+from cinch.utils import serialize
 from cinch.worker import dispatcher, PullRequestStatusUpdated
 from .models import Job, Build, BuildSha
 from .exceptions import UnknownJob
@@ -325,8 +326,18 @@ def jenkins_check(pull_request):
     else:
         status = None
 
+    job_list = map(serialize, jobs)
+    for index, job in enumerate(job_list):
+        job.update({
+            'build_number': pr_map[pull_request][job['id']][0],
+            'status': pr_map[pull_request][job['id']][1]
+        })
+
     return CheckStatus(
         label='Jenkins',
         status=status,
         url=pull_request_status_url,
+        data={
+            'jobs': job_list
+        }
     )

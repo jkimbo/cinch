@@ -1,51 +1,87 @@
 import React from 'react';
 import cx from 'classnames';
 
+function getIcon(status) {
+  if (status === true) {
+    return <i className="fa fa-check"></i>;
+  }
+
+  if (status === false) {
+    return <i className="fa fa-times"></i>;
+  }
+
+  return <i className="fa fa-circle"></i>;
+}
+
+function getStatusModifier(status) {
+  if (status === true) {
+    return 'success';
+  }
+  if (status === false) {
+    return 'danger';
+  }
+  return 'warning';
+}
+
 const Jenkins = React.createClass({
   propTypes: {
+    baseUrl: React.PropTypes.string.isRequired,
     check: React.PropTypes.shape({
       'label': React.PropTypes.string.isRequired,
-      'status': React.PropTypes.bool.isRequired
-    }),
-    jobs: React.PropTypes.arrayOf(React.PropTypes.shape({
-      'url': React.PropTypes.string.isRequired,
-      'name': React.PropTypes.string.isRequired,
       'status': React.PropTypes.bool.isRequired,
-      'build_number': React.PropTypes.number
-    }))
+      'data': React.PropTypes.shape({
+        'jobs': React.PropTypes.arrayOf(React.PropTypes.shape({
+          'id': React.PropTypes.number.isRequired,
+          'name': React.PropTypes.string.isRequired,
+          'status': React.PropTypes.bool,
+        }))
+      }),
+    }),
   },
 
   render() {
-    const {jobs, check} = this.props;
+    const {check, baseUrl} = this.props;
 
-    const _jobs = jobs.map(job => {
-      const labelClasses = cx({
-        'label': true,
-        'label-success': job.status === true,
-        'label-warning': job.status === null,
-        'label-danger': job.status === false
+    let jobs = [];
+
+    if (check.data.jobs) {
+      jobs = check.data.jobs.map(job => {
+        const url = `${baseUrl}/job/${job.name}/${job.build_number}/`;
+
+        const statusModifier = getStatusModifier(job.status);
+        const classes = cx({
+          'Check__Item': true,
+          [`Check__Item--${statusModifier}`]: true,
+        });
+
+        return (
+          <tr className={classes} key={job.id}>
+            <td>{getIcon(job.status)}</td>
+            <td>
+              <a href={url}>#{job['build_number']}</a>
+            </td>
+            <td>{job.name}</td>
+          </tr>
+        );
       });
+    }
 
-      return (
-        <div className="PullRequest_Job">
-          <a href={job.url} className={labelClasses}>
-            {job.name}: {job['build_number']}
-          </a>
-        </div>
-      );
+    const modifier = getStatusModifier(check.status);
+    const titleClasses = cx({
+      'Check__Title': true,
+      [`Check__Title--${modifier}`]: true,
     });
 
     return (
-      <div className="Jenkins">
-        <h4>
-          {check.status === true ?
-            <i className="fa fa-check"></i> :
-            <i className="fa fa-times"></i>
-          }
+      <div className="Check">
+        <h3 className={titleClasses}>
+          {getIcon(check.status)}
           {" "}
           Jenkins
-        </h4>
-        {_jobs}
+        </h3>
+        <table className="table">
+          {jobs}
+        </table>
       </div>
     );
   }
