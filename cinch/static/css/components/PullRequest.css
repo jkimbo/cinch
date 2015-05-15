@@ -1,0 +1,19 @@
+.PullRequest {
+    &__Meta {
+        margin: 10px 0;
+    }
+
+    &__Project {
+        color: #333;
+        font-size: 20px;
+        line-height: 1.5;
+    }
+
+    &__Commit {
+        float: right;
+        color: #666;
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+        font-size: 14px;
+        line-height: 30px;
+    }
+}

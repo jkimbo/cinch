@@ -4,6 +4,8 @@ import Jenkins from './views/Jenkins';
 import Mergeable from './views/Mergeable';
 import UpToDate from './views/UpToDate';
 
+require('css/components/PullRequest.css');
+
 
 const PullRequest = React.createClass({
   propTypes: {
@@ -24,22 +26,34 @@ const PullRequest = React.createClass({
     const mergeableCheck = pull.checks.find((check) => check.key === 'mergeable');
     const upToDateCheck = pull.checks.find((check) => check.key === 'uptodate');
 
+    const {project} = pull;
+    const pullRequestUrl = `https://github.com/${project.owner}/${project.name}/pull/${pull.number}`;
+    const projectUrl = `https://github.com/${project.owner}/${project.name}`;
+    const headUrl = `https://github.com/${project.owner}/${project.name}/commit/${pull.head}`;
+
     return (
       <div className="row">
         <div className="col-md-6 col-md-offset-3">
           <div className="PullRequest">
             <h2 className="PullRequest__Title">
-              <span style={{ color: '#9aa2ab' }}>#{pull.number}</span> {pull.title} <small>by {pull.owner}</small>
+              <a href={pullRequestUrl} style={{ color: '#9aa2ab' }}>#{pull.number}</a> {pull.title} <small>by {pull.owner}</small>
             </h2>
-            <div className="PullRequest__Meta">
-              <div className="PullRequest__Commit">
-                <a href="">
-                  Head: {shortHeadSha}
-                </a>
-                <br/>
-                <a href="">
-                  Merge head: {shortMergeSha}
-                </a>
+            <div className="row">
+              <div className="col-md-12">
+                <div className="PullRequest__Meta">
+                  <div className="row">
+                    <div className="col-md-6">
+                      <a href={projectUrl} className="PullRequest__Project">
+                        <i className="fa fa-github"></i> {project.owner}/{project.name}
+                      </a>
+                    </div>
+                    <div className="col-md-6">
+                      <a href={headUrl} className="PullRequest__Commit">
+                        SHA: {shortHeadSha}
+                      </a>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div className="row">

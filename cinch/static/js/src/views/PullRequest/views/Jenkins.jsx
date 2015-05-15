@@ -96,7 +96,7 @@ const Jenkins = React.createClass({
 
     return (
       <div className={classes}>
-        <h3 className="Check__Title">
+        <h4 className="Check__Title">
           {getIcon(check.status)}
           {" "}
           Jenkins
@@ -104,7 +104,7 @@ const Jenkins = React.createClass({
             {open ? <i className="fa fa-caret-up"></i> :
               <i className="fa fa-caret-down"></i>}
           </div>
-        </h3>
+        </h4>
         <div className={containerClasses}>
           <table className="table">
             {jobs}

@@ -82,6 +82,7 @@ def pull_request(project_owner, project_name, number):
     pull_object['checks'] = map(lambda check: check.__dict__, list(run_checks(pull_request)))
     pull_object['sync_label'] = sync_label(
         pull_request.ahead_of_master, pull_request.behind_master)
+    pull_object['project'] = serialize(pull_request.project)
 
     context = {
         'pull': pull_request,

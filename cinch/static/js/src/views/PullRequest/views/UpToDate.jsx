@@ -30,7 +30,7 @@ const UpToDate = React.createClass({
     check: React.PropTypes.shape({
       'label': React.PropTypes.string.isRequired,
       'verbose_name': React.PropTypes.string.isRequired,
-      'status': React.PropTypes.bool.isRequired,
+      'status': React.PropTypes.bool,
       'data': React.PropTypes.shape({ }),
     }),
   },
