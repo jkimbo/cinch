@@ -3,6 +3,9 @@
 
 var path = require('path');
 var webpack = require('webpack');
+var autoprefixer = require('autoprefixer-core');
+var nested = require('postcss-nested');
+var simpleVars = require('postcss-simple-vars');
 
 var PRODUCTION = (process.env.NODE_ENV === 'production');
 
@@ -46,6 +49,10 @@ module.exports = {
         test: /\.jsx|.js$/,
         exclude: /node_modules\//,
         loaders: babelLoader
+      },
+      {
+        test: /\.css$/,
+        loader: "style-loader!css-loader!postcss-loader"
       }
     ]
   },
@@ -57,5 +64,6 @@ module.exports = {
     fs: "empty",
     net: "empty"
   },
-  plugins: plugins
+  plugins: plugins,
+  postcss: [nested, simpleVars, autoprefixer]
 };

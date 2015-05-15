@@ -13,7 +13,10 @@ const PullRequest = React.createClass({
     const {pull, jenkinsUrl} = this.props;
 
     const shortHeadSha = pull.head.substr(0, 9);
-    const shortMergeSha = pull['merge_head'].substr(0, 9);
+    let shortMergeSha = pull['merge_head'];
+    if (shortMergeSha) {
+      shortMergeSha = shortMergeSha.substr(0, 9);
+    }
 
     const jenkinsCheck = pull.checks.find((check) => check.label === 'Jenkins');
 

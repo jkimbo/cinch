@@ -1,6 +1,8 @@
 import React from 'react';
 import cx from 'classnames';
 
+require('css/components/Check.css');
+
 function getIcon(status) {
   if (status === true) {
     return <i className="fa fa-check"></i>;
@@ -49,13 +51,13 @@ const Jenkins = React.createClass({
         const url = `${baseUrl}/job/${job.name}/${job.build_number}/`;
 
         const statusModifier = getStatusModifier(job.status);
-        const classes = cx({
+        const itemClasses = cx({
           'Check__Item': true,
           [`Check__Item--${statusModifier}`]: true,
         });
 
         return (
-          <tr className={classes} key={job.id}>
+          <tr className={itemClasses} key={job.id}>
             <td>{getIcon(job.status)}</td>
             <td>
               <a href={url}>#{job['build_number']}</a>
@@ -67,21 +69,23 @@ const Jenkins = React.createClass({
     }
 
     const modifier = getStatusModifier(check.status);
-    const titleClasses = cx({
-      'Check__Title': true,
-      [`Check__Title--${modifier}`]: true,
+    const classes = cx({
+      'Check': true,
+      [`-t--${modifier}`]: true,
     });
 
     return (
-      <div className="Check">
-        <h3 className={titleClasses}>
+      <div className={classes}>
+        <h3 className="Check__Title">
           {getIcon(check.status)}
           {" "}
           Jenkins
         </h3>
-        <table className="table">
-          {jobs}
-        </table>
+        <div className="Check__Container">
+          <table className="table">
+            {jobs}
+          </table>
+        </div>
       </div>
     );
   }
